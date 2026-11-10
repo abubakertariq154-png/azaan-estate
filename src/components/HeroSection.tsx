@@ -15,7 +15,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   onSelectCategory,
 }) => {
   return (
-    <section className="relative w-full h-screen min-h-[560px] max-h-[1080px] p-2 sm:p-4 md:p-6 bg-[#0d1210] flex flex-col box-border overflow-hidden">
+    <section className="relative w-full h-screen min-h-[520px] max-h-[900px] p-2 sm:p-4 md:p-6 bg-[#0d1210] flex flex-col box-border overflow-hidden">
 
       {/* Card Container */}
       <div className="relative w-full h-full rounded-[20px] sm:rounded-[32px] md:rounded-[44px] overflow-hidden shadow-2xl flex flex-col justify-between border border-white/10">
@@ -40,26 +40,37 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             onClick={() => onSelectCategory('all')}
             className="flex items-center gap-2 sm:gap-3 cursor-pointer group"
           >
-            {/* Icon box */}
-            <div className="relative w-8 h-8 sm:w-11 sm:h-11 shrink-0">
-              <div className="absolute inset-0 rounded-xl sm:rounded-2xl bg-gradient-to-br from-[#875d46] to-[#5a3828] shadow-lg" />
+            {/* Icon box — stylised building with crescent */}
+            <div className="relative w-10 h-10 sm:w-13 sm:h-13 shrink-0">
+              {/* Outer glow ring */}
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[#c48a68] via-[#875d46] to-[#3d2314] shadow-[0_4px_20px_rgba(196,138,104,0.45)] group-hover:shadow-[0_4px_28px_rgba(196,138,104,0.65)] transition-shadow duration-300" />
+              {/* Inner shine */}
+              <div className="absolute inset-[1.5px] rounded-[14px] bg-gradient-to-br from-[#1a0f08]/60 to-transparent" />
               <div className="absolute inset-0 flex items-center justify-center">
-                <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" className="w-4 h-4 sm:w-5 sm:h-5">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="m3 9.75 9-7.5 9 7.5v9.75a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 19.5V9.75Z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 22.5V12h6v10.5" />
+                <svg viewBox="0 0 28 28" fill="none" className="w-5 h-5 sm:w-6 sm:h-6">
+                  {/* Building base */}
+                  <path d="M4 26V12.5L14 4L24 12.5V26H17.5V19H10.5V26H4Z" fill="white" fillOpacity="0.95"/>
+                  {/* Door */}
+                  <rect x="11.5" y="19" width="5" height="7" rx="1" fill="#875d46"/>
+                  {/* Windows */}
+                  <rect x="6" y="15" width="3" height="3" rx="0.5" fill="#c48a68" fillOpacity="0.9"/>
+                  <rect x="19" y="15" width="3" height="3" rx="0.5" fill="#c48a68" fillOpacity="0.9"/>
+                  {/* Roof star/crescent accent */}
+                  <circle cx="14" cy="2.5" r="1.5" fill="#c48a68"/>
                 </svg>
               </div>
             </div>
+
             {/* Brand text */}
             <div className="flex flex-col leading-none">
-              <div className="flex items-baseline gap-1">
-                <span className="font-black text-base sm:text-xl md:text-2xl tracking-tight text-white">AZAAN</span>
-                <span className="font-black text-base sm:text-xl md:text-2xl tracking-tight text-[#c48a68]">ESTATE</span>
+              <div className="flex items-end gap-[3px]">
+                <span className="font-black text-[17px] sm:text-[22px] md:text-[26px] tracking-[0.04em] text-white drop-shadow-sm">AZAAN</span>
+                <span className="font-black text-[17px] sm:text-[22px] md:text-[26px] tracking-[0.04em] text-transparent bg-clip-text bg-gradient-to-r from-[#c48a68] to-[#e8b08a] drop-shadow-sm">ESTATE</span>
               </div>
-              <div className="flex items-center gap-1 mt-0.5">
-                <span className="w-4 h-px bg-[#875d46]" />
-                <span className="text-[8px] sm:text-[9px] tracking-[0.2em] text-[#c48a68]/80 uppercase font-semibold">Premium Real Estate</span>
-                <span className="w-4 h-px bg-[#875d46]" />
+              <div className="flex items-center gap-1 mt-[3px]">
+                <span className="w-3 h-px bg-gradient-to-r from-transparent to-[#875d46]" />
+                <span className="text-[7.5px] sm:text-[9px] tracking-[0.25em] text-[#c48a68]/75 uppercase font-bold">Premium Real Estate</span>
+                <span className="w-3 h-px bg-gradient-to-l from-transparent to-[#875d46]" />
               </div>
             </div>
           </div>
@@ -88,22 +99,22 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         </header>
 
         {/* HERO CONTENT */}
-        <div className="relative z-10 px-4 sm:px-8 md:px-14 py-4 max-w-xl sm:max-w-2xl my-auto">
+        <div className="relative z-10 px-4 sm:px-8 md:px-14 py-2 sm:py-4 max-w-xl sm:max-w-2xl my-auto">
 
           {/* Tag */}
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#875d46]/20 border border-[#875d46]/40 mb-3 sm:mb-5">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#875d46]/20 border border-[#875d46]/40 mb-2 sm:mb-4">
             <span className="w-1.5 h-1.5 rounded-full bg-[#c48a68] animate-pulse" />
-            <span className="text-[10px] sm:text-xs font-bold tracking-widest uppercase text-[#c48a68]">Bahria Town Lahore</span>
+            <span className="text-[9px] sm:text-xs font-bold tracking-widest uppercase text-[#c48a68]">Bahria Town Lahore</span>
           </div>
 
           {/* Title */}
-          <h1 className="text-[1.6rem] sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight text-white leading-[1.05] mb-3 sm:mb-5">
+          <h1 className="text-[1.4rem] sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight text-white leading-[1.05] mb-2 sm:mb-4">
             Find a Place <br />
             to <span className="text-[#c48a68]">Call Home</span>
           </h1>
 
           {/* Desc */}
-          <p className="text-white/70 text-xs sm:text-base font-normal max-w-sm sm:max-w-md mb-5 sm:mb-8 leading-relaxed">
+          <p className="text-white/70 text-[11px] sm:text-base font-normal max-w-sm sm:max-w-md mb-4 sm:mb-7 leading-relaxed">
             Discover premium houses, plots & apartments in Bahria Town Lahore — verified listings, real prices.
           </p>
 
@@ -111,7 +122,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           <div className="flex flex-wrap items-center gap-2 sm:gap-3">
             <a
               href="#properties-section"
-              className="group inline-flex items-center gap-2 sm:gap-3 pl-4 sm:pl-6 pr-2 py-2 sm:py-2.5 rounded-full bg-white hover:bg-[#f5f0eb] text-[#1c241e] text-xs sm:text-sm font-bold transition-all shadow-xl hover:-translate-y-0.5"
+              className="group inline-flex items-center gap-2 sm:gap-3 pl-4 sm:pl-6 pr-2 py-1.5 sm:py-2.5 rounded-full bg-white hover:bg-[#f5f0eb] text-[#1c241e] text-xs sm:text-sm font-bold transition-all shadow-xl hover:-translate-y-0.5"
             >
               <span>Explore Properties</span>
               <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-[#1c241e] group-hover:bg-[#875d46] flex items-center justify-center transition-colors">
@@ -121,7 +132,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
             <a
               href="#contact"
-              className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-2 sm:py-3 rounded-full bg-white/10 hover:bg-white/20 text-white text-xs sm:text-sm font-semibold backdrop-blur-md border border-white/25 transition-all hover:-translate-y-0.5"
+              className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-1.5 sm:py-3 rounded-full bg-white/10 hover:bg-white/20 text-white text-xs sm:text-sm font-semibold backdrop-blur-md border border-white/25 transition-all hover:-translate-y-0.5"
             >
               <Phone className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#c48a68]" />
               <span>Contact Advisor</span>
@@ -130,10 +141,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         </div>
 
         {/* BOTTOM BAR */}
-        <div className="relative z-10 px-4 sm:px-8 md:px-14 pb-4 sm:pb-7 flex flex-wrap items-center justify-between gap-2">
+        <div className="relative z-10 px-4 sm:px-8 md:px-14 pb-3 sm:pb-6 flex flex-wrap items-center justify-between gap-2">
 
-          {/* Category Pills */}
-          <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-1">
+          {/* Category + Type Pills */}
+          <div className="flex items-center gap-1.5 flex-wrap">
             {[
               { key: 'residential', label: 'Residential', Icon: Building2, color: 'text-emerald-400' },
               { key: 'commercial', label: 'Commercial', Icon: TrendingUp, color: 'text-blue-400' },
@@ -142,7 +153,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               <button
                 key={key}
                 onClick={() => onSelectCategory(key as PropertyCategory)}
-                className={`flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3.5 py-1.5 rounded-full text-[11px] sm:text-xs font-semibold backdrop-blur-md border transition-all whitespace-nowrap ${
+                className={`flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-semibold backdrop-blur-md border transition-all whitespace-nowrap ${
                   activeCategory === key
                     ? 'bg-white text-[#1c241e] border-white shadow-md'
                     : 'bg-white/10 hover:bg-white/20 text-white border-white/20'
@@ -152,6 +163,19 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 <span>{label}</span>
               </button>
             ))}
+
+            {/* Divider */}
+            <span className="w-px h-4 bg-white/20 mx-0.5" />
+
+            {/* For Sale / For Rent */}
+            <a href="#properties-section" onClick={() => onSelectCategory('all')}
+              className="flex items-center gap-1 px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-semibold bg-[#875d46]/80 hover:bg-[#875d46] text-white border border-[#875d46] transition-all whitespace-nowrap">
+              🏷️ For Sale
+            </a>
+            <a href="#properties-section" onClick={() => onSelectCategory('all')}
+              className="flex items-center gap-1 px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-semibold bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all whitespace-nowrap">
+              🔑 For Rent
+            </a>
           </div>
 
           {/* Stats */}

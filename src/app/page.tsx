@@ -224,7 +224,7 @@ export default function Home() {
       />
 
       {/* Main Container */}
-      <main className="flex-1">
+      <main className="flex-1 bg-[#dfe6dd]">
 
         {/* Property Showcase & Exploration */}
         <section id="properties-section" className="max-w-7xl mx-auto px-4 sm:px-8 pb-20 pt-6 sm:pt-10">

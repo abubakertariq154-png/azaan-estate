@@ -30,11 +30,11 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
 }) => {
   const formatPrice = (price: number, listingType: string) => {
     const formatted = price >= 10000000
-      ? `${(price / 10000000).toFixed(1)} کروڑ`
+      ? `${(price / 10000000).toFixed(1)} Cr`
       : price >= 100000
-      ? `${(price / 100000).toFixed(1)} لاکھ`
+      ? `${(price / 100000).toFixed(1)} Lac`
       : price.toLocaleString('en-PK');
-    return listingType === 'rent' ? `PKR ${formatted}/ماہ` : `PKR ${formatted}`;
+    return listingType === 'rent' ? `PKR ${formatted}/month` : `PKR ${formatted}`;
   };
 
   const getCategoryBadge = (category: string) => {

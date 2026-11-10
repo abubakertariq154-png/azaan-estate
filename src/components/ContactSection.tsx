@@ -15,6 +15,21 @@ export const ContactSection: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Build WhatsApp message
+    const waMessage =
+      `🏠 *New Property Inquiry — Azaan Estate*\n\n` +
+      `👤 *Name:* ${formData.name}\n` +
+      `📞 *Phone:* ${formData.phone}\n` +
+      `📧 *Email:* ${formData.email}\n` +
+      `🏷️ *Interest:* ${formData.propertyType}\n` +
+      `💬 *Message:* ${formData.message || 'No additional message'}`;
+
+    const waUrl = `https://wa.me/923045351802?text=${encodeURIComponent(waMessage)}`;
+
+    // Open WhatsApp in new tab
+    window.open(waUrl, '_blank');
+
     setSubmitted(true);
     setTimeout(() => {
       setSubmitted(false);
@@ -95,7 +110,7 @@ export const ContactSection: React.FC = () => {
                 </div>
                 <h4 className="text-lg font-bold text-[#1c241e]">Inquiry Received</h4>
                 <p className="text-xs text-stone-500 max-w-xs mx-auto">
-                  Thank you! A NexaHome advisor has received your request and will reach out shortly.
+                  Thank you! Your message has been sent to Abubakr via WhatsApp. He will get back to you shortly.
                 </p>
               </div>
             ) : (
