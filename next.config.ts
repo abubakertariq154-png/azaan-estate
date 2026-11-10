@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
+  allowedDevOrigins: ['*.lhr.life', '*.loca.lt', '*.localhost.run'],
   cacheComponents: true,
   partialPrefetching: true,
   turbopack: {
