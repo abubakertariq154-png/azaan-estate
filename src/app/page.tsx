@@ -16,7 +16,7 @@ import { PropertyFormModal } from '@/components/PropertyFormModal';
 import { PropertyDetailsModal } from '@/components/PropertyDetailsModal';
 import { VideoModal } from '@/components/VideoModal';
 import { ContactSection } from '@/components/ContactSection';
-import { Building2, Plus, AlertCircle, SlidersHorizontal } from 'lucide-react';
+import { Building2, Plus, AlertCircle, SlidersHorizontal, Search, X, TrendingUp, Award } from 'lucide-react';
 
 export default function Home() {
   const [properties, setProperties] = useState<Property[]>([]);
@@ -216,24 +216,110 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-[#f6f5f2] text-[#1c241e] flex flex-col selection:bg-[#875d46] selection:text-white font-sans">
       
-      {/* Hero Section With Integrated Search & Filters */}
-      <HeroSection
-        filters={filters}
-        onFilterChange={handleFilterChange}
-        activeCategory={activeCategoryTab}
-        onSelectCategory={handleSelectTab}
-        categoryCounts={categoryCounts}
-        totalResults={filteredProperties.length}
-      />
+      {/* Hero Section */}
+      <HeroSection onExploreClick={handleResetFilters} />
 
       {/* Main Container */}
       <main className="flex-1 bg-[#dfe6dd]">
 
-        {/* Property Showcase & Exploration */}
-        <section id="properties-section" className="max-w-7xl mx-auto px-4 sm:px-8 pb-20 pt-8 sm:pt-12">
+        {/* ── UNIFIED SEARCH & FILTER BAR DIRECTLY BELOW HERO ── */}
+        <section id="properties-section" className="max-w-7xl mx-auto px-4 sm:px-8 pt-6 sm:pt-10">
+          <div className="bg-white rounded-2xl sm:rounded-3xl border border-[#ccd6c8] p-4 sm:p-6 shadow-md mb-8">
+            
+            {/* Top row: Listing Type Tabs + Category Pills */}
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 sm:gap-4 pb-4 border-b border-stone-200">
+              
+              {/* For Sale / For Rent / All toggle */}
+              <div className="flex items-center gap-1.5 p-1 bg-[#f0f4ef] rounded-full border border-stone-200 self-start">
+                {[
+                  { type: 'all', label: 'All Listings' },
+                  { type: 'sale', label: '🏷️ For Sale' },
+                  { type: 'rent', label: '🔑 For Rent' },
+                ].map(({ type, label }) => (
+                  <button
+                    key={type}
+                    onClick={() => handleFilterChange('listingType', type as any)}
+                    className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
+                      filters.listingType === type
+                        ? 'bg-[#1c241e] text-white shadow-sm'
+                        : 'text-stone-600 hover:text-[#1c241e]'
+                    }`}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
 
-          {/* Section Header & Active Filter Bar */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 sm:mb-8">
+              {/* Category Pills */}
+              <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+                {[
+                  { key: 'all', label: 'All', icon: null, count: categoryCounts.all },
+                  { key: 'residential', label: 'Residential', icon: Building2, count: categoryCounts.residential },
+                  { key: 'commercial', label: 'Commercial', icon: TrendingUp, count: categoryCounts.commercial },
+                  { key: 'highrise', label: 'Highrise', icon: Award, count: categoryCounts.highrise },
+                ].map(({ key, label, icon: Icon, count }) => (
+                  <button
+                    key={key}
+                    onClick={() => handleSelectTab(key as any)}
+                    className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-all border cursor-pointer ${
+                      activeCategoryTab === key
+                        ? 'bg-[#875d46] text-white border-[#875d46] shadow-sm'
+                        : 'bg-[#f7f6f2] hover:bg-[#eeebe3] text-stone-700 border-stone-200'
+                    }`}
+                  >
+                    {Icon && <Icon className="w-3.5 h-3.5" />}
+                    <span>{label}</span>
+                    <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${
+                      activeCategoryTab === key ? 'bg-white/20 text-white' : 'bg-stone-200 text-stone-600'
+                    }`}>
+                      {count}
+                    </span>
+                  </button>
+                ))}
+              </div>
+
+            </div>
+
+            {/* Bottom row: Search Input Box + Active Status & Reset */}
+            <div className="flex flex-col sm:flex-row items-center gap-3 pt-4">
+              <div className="relative w-full flex-1">
+                <Search className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <input
+                  type="text"
+                  value={filters.searchQuery}
+                  onChange={(e) => handleFilterChange('searchQuery', e.target.value)}
+                  placeholder="Search by block (e.g. Sector C, Rafi Block, Tauheed), title, or keywords..."
+                  className="w-full pl-10 pr-9 py-2.5 sm:py-3 bg-[#fbfaf8] border border-stone-300 rounded-xl sm:rounded-2xl text-stone-900 text-xs sm:text-sm placeholder-stone-400 focus:outline-none focus:border-[#875d46] focus:bg-white transition-colors"
+                />
+                {filters.searchQuery && (
+                  <button
+                    onClick={() => handleFilterChange('searchQuery', '')}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-700"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                )}
+              </div>
+
+              <div className="flex items-center justify-between sm:justify-end gap-2.5 w-full sm:w-auto">
+                <span className="text-xs font-semibold px-3 py-2 rounded-xl bg-[#f0f4ef] text-stone-700 whitespace-nowrap">
+                  Showing {filteredProperties.length} of {properties.length}
+                </span>
+                {(filters.category !== 'all' || filters.listingType !== 'all' || filters.searchQuery) && (
+                  <button
+                    onClick={handleResetFilters}
+                    className="text-xs font-bold px-3 py-2 rounded-xl bg-[#875d46] hover:bg-[#724e3a] text-white transition-colors whitespace-nowrap cursor-pointer shadow-xs"
+                  >
+                    Reset All ✕
+                  </button>
+                )}
+              </div>
+            </div>
+
+          </div>
+
+          {/* Section Header */}
+          <div className="flex items-center justify-between mb-6">
             <div>
               <div className="flex items-center gap-2 mb-1">
                 <span className="w-2 h-2 rounded-full bg-[#875d46]" />
@@ -242,20 +328,6 @@ export default function Home() {
               <h2 className="text-2xl sm:text-3xl font-black text-[#1c241e] tracking-tight">
                 Featured Properties
               </h2>
-            </div>
-
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-xs font-semibold px-3 py-1.5 rounded-full bg-white text-stone-700 border border-stone-200 shadow-2xs">
-                Showing {filteredProperties.length} of {properties.length} listings
-              </span>
-              {(filters.category !== 'all' || filters.listingType !== 'all' || filters.searchQuery) && (
-                <button
-                  onClick={handleResetFilters}
-                  className="text-xs font-bold px-3 py-1.5 rounded-full bg-[#875d46] hover:bg-[#724e3a] text-white transition-colors cursor-pointer"
-                >
-                  Clear Filters ✕
-                </button>
-              )}
             </div>
           </div>
 
