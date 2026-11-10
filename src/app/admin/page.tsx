@@ -39,6 +39,7 @@ import {
   LayoutGrid,
   Table as TableIcon,
   AlertTriangle,
+  LogOut,
   X
 } from 'lucide-react';
 
@@ -46,86 +47,10 @@ export default function AdminPage() {
   const [properties, setProperties] = useState<Property[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
 
-  // ── Password Gate ────────────────────────────────────────
+  // ── Password Gate State ──────────────────────────────────
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [passwordInput, setPasswordInput] = useState('');
   const [passwordError, setPasswordError] = useState(false);
-
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (passwordInput === '1234') {
-      setIsAuthenticated(true);
-      setPasswordError(false);
-    } else {
-      setPasswordError(true);
-      setPasswordInput('');
-    }
-  };
-
-  if (!isAuthenticated) {
-    return (
-      <div className="min-h-screen bg-[#0d1210] flex items-center justify-center p-4">
-        <div className="w-full max-w-sm">
-          {/* Logo */}
-          <div className="flex items-center gap-3 justify-center mb-8">
-            <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-[#875d46] to-[#3d2314] flex items-center justify-center shadow-lg">
-              <Building2 className="w-5 h-5 text-white" />
-            </div>
-            <div className="flex flex-col leading-none">
-              <div className="flex items-end gap-1">
-                <span className="font-black text-xl text-white tracking-tight">AZAAN</span>
-                <span className="font-black text-xl tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-[#c48a68] to-[#e8b08a]">ESTATE</span>
-              </div>
-              <span className="text-[9px] tracking-[0.2em] text-[#c48a68]/70 uppercase font-semibold mt-0.5">Admin Portal</span>
-            </div>
-          </div>
-
-          {/* Login Card */}
-          <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-3xl p-8 shadow-2xl">
-            <h2 className="text-white font-bold text-xl mb-1 text-center">Secure Login</h2>
-            <p className="text-white/40 text-xs text-center mb-6">Enter your admin password to continue</p>
-
-            <form onSubmit={handleLogin} className="space-y-4">
-              <div>
-                <label className="block text-xs font-semibold text-white/60 uppercase tracking-wider mb-1.5">
-                  Password
-                </label>
-                <input
-                  type="password"
-                  value={passwordInput}
-                  onChange={(e) => { setPasswordInput(e.target.value); setPasswordError(false); }}
-                  placeholder="Enter password"
-                  autoFocus
-                  className={`w-full px-4 py-3 bg-white/10 border rounded-xl text-white text-sm placeholder-white/30 focus:outline-none transition-colors ${
-                    passwordError ? 'border-red-400/70 focus:border-red-400' : 'border-white/20 focus:border-[#c48a68]'
-                  }`}
-                />
-                {passwordError && (
-                  <p className="text-red-400 text-xs mt-1.5 flex items-center gap-1">
-                    <AlertTriangle className="w-3 h-3" /> Incorrect password. Please try again.
-                  </p>
-                )}
-              </div>
-
-              <button
-                type="submit"
-                className="w-full py-3 rounded-xl bg-gradient-to-r from-[#875d46] to-[#c48a68] hover:from-[#9b6b51] hover:to-[#d49878] text-white font-bold text-sm transition-all shadow-lg"
-              >
-                Login to Admin Panel
-              </button>
-            </form>
-
-            <div className="mt-4 text-center">
-              <Link href="/" className="text-xs text-white/30 hover:text-white/60 transition-colors">
-                ← Back to Website
-              </Link>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-  // ── End Password Gate ────────────────────────────────────
 
   // Filters & search
   const [searchQuery, setSearchQuery] = useState('');
@@ -146,6 +71,35 @@ export default function AdminPage() {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [websiteLink, setWebsiteLink] = useState('');
   const [adminLink, setAdminLink] = useState('');
+
+  // Check persistent session auth on mount
+  useEffect(() => {
+    if (typeof window !== 'undefined' && sessionStorage.getItem('azaan_admin_auth') === 'true') {
+      setIsAuthenticated(true);
+    }
+  }, []);
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (passwordInput === '1234') {
+      setIsAuthenticated(true);
+      setPasswordError(false);
+      if (typeof window !== 'undefined') {
+        sessionStorage.setItem('azaan_admin_auth', 'true');
+      }
+    } else {
+      setPasswordError(true);
+      setPasswordInput('');
+    }
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    setPasswordInput('');
+    if (typeof window !== 'undefined') {
+      sessionStorage.removeItem('azaan_admin_auth');
+    }
+  };
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
@@ -296,6 +250,71 @@ export default function AdminPage() {
     }
   };
 
+  // ── Password Protection Screen (Rendered only after all hooks are mounted) ──
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-[#0d1210] flex items-center justify-center p-4">
+        <div className="w-full max-w-sm">
+          {/* Logo */}
+          <div className="flex items-center gap-3 justify-center mb-8">
+            <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-[#875d46] to-[#3d2314] flex items-center justify-center shadow-lg">
+              <Building2 className="w-5 h-5 text-white" />
+            </div>
+            <div className="flex flex-col leading-none">
+              <div className="flex items-end gap-1">
+                <span className="font-black text-xl text-white tracking-tight">AZAAN</span>
+                <span className="font-black text-xl tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-[#c48a68] to-[#e8b08a]">ESTATE</span>
+              </div>
+              <span className="text-[9px] tracking-[0.2em] text-[#c48a68]/70 uppercase font-semibold mt-0.5">Admin Portal</span>
+            </div>
+          </div>
+
+          {/* Login Card */}
+          <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-3xl p-8 shadow-2xl">
+            <h2 className="text-white font-bold text-xl mb-1 text-center">Secure Login</h2>
+            <p className="text-white/40 text-xs text-center mb-6">Enter your admin password to continue</p>
+
+            <form onSubmit={handleLogin} className="space-y-4">
+              <div>
+                <label className="block text-xs font-semibold text-white/60 uppercase tracking-wider mb-1.5">
+                  Password
+                </label>
+                <input
+                  type="password"
+                  value={passwordInput}
+                  onChange={(e) => { setPasswordInput(e.target.value); setPasswordError(false); }}
+                  placeholder="Enter password"
+                  autoFocus
+                  className={`w-full px-4 py-3 bg-white/10 border rounded-xl text-white text-sm placeholder-white/30 focus:outline-none transition-colors ${
+                    passwordError ? 'border-red-400/70 focus:border-red-400' : 'border-white/20 focus:border-[#c48a68]'
+                  }`}
+                />
+                {passwordError && (
+                  <p className="text-red-400 text-xs mt-1.5 flex items-center gap-1">
+                    <AlertTriangle className="w-3 h-3 shrink-0" /> Incorrect password. Please try again.
+                  </p>
+                )}
+              </div>
+
+              <button
+                type="submit"
+                className="w-full py-3 rounded-xl bg-gradient-to-r from-[#875d46] to-[#c48a68] hover:from-[#9b6b51] hover:to-[#d49878] text-white font-bold text-sm transition-all shadow-lg cursor-pointer"
+              >
+                Login to Admin Panel
+              </button>
+            </form>
+
+            <div className="mt-4 text-center">
+              <Link href="/" className="text-xs text-white/30 hover:text-white/60 transition-colors">
+                ← Back to Website
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#f6f5f2] text-[#1c241e] font-sans flex flex-col">
       
@@ -362,6 +381,14 @@ export default function AdminPage() {
             >
               <Plus className="w-4 h-4 text-emerald-400" />
               <span>Add Property</span>
+            </button>
+
+            <button
+              onClick={handleLogout}
+              title="Logout from Admin Panel"
+              className="p-2 rounded-full border border-stone-200 bg-stone-50 hover:bg-red-50 text-stone-500 hover:text-red-600 transition-colors"
+            >
+              <LogOut className="w-4 h-4" />
             </button>
           </div>
 
