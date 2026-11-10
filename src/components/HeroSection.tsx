@@ -9,10 +9,10 @@ interface HeroSectionProps {
 
 export const HeroSection: React.FC<HeroSectionProps> = ({ onExploreClick }) => {
   return (
-    <section className="relative w-full p-2.5 sm:p-4 md:p-6 bg-[#0d1210] flex flex-col box-border">
+    <section className="relative w-full h-screen h-[100dvh] p-2 sm:p-4 md:p-6 bg-[#0d1210] flex flex-col box-border overflow-hidden">
 
-      {/* Card Container */}
-      <div className="relative w-full rounded-[24px] sm:rounded-[36px] md:rounded-[44px] overflow-hidden shadow-2xl flex flex-col justify-between border border-white/10 min-h-[480px] sm:min-h-[540px] md:min-h-[580px]">
+      {/* Card Container - Exactly 100vh (h-full) */}
+      <div className="relative w-full h-full rounded-[24px] sm:rounded-[36px] md:rounded-[44px] overflow-hidden shadow-2xl flex flex-col justify-between border border-white/10">
 
         {/* Background Image & Overlay */}
         <div className="absolute inset-0 z-0">
@@ -73,10 +73,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onExploreClick }) => {
         </header>
 
         {/* ── HERO CENTER CONTENT ── */}
-        <div className="relative z-10 px-4 sm:px-8 md:px-14 py-6 sm:py-10 my-auto max-w-2xl text-left">
+        <div className="relative z-10 px-4 sm:px-8 md:px-14 py-4 sm:py-8 my-auto max-w-2xl text-left">
 
           {/* Location Badge */}
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#875d46]/25 border border-[#875d46]/45 mb-3 sm:mb-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#875d46]/25 border border-[#875d46]/45 mb-2 sm:mb-4">
             <span className="w-1.5 h-1.5 rounded-full bg-[#c48a68] animate-pulse" />
             <span className="text-[10px] sm:text-xs font-bold tracking-widest uppercase text-[#c48a68]">
               Bahria Town Lahore
@@ -84,13 +84,13 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onExploreClick }) => {
           </div>
 
           {/* Headline */}
-          <h1 className="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight text-white leading-[1.08] mb-3 sm:mb-4">
+          <h1 className="text-2xl sm:text-5xl md:text-6xl font-black tracking-tight text-white leading-[1.08] mb-2 sm:mb-4">
             Find a Place <br />
             to <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#c48a68] to-[#e8b08a]">Call Home</span>
           </h1>
 
           {/* Subtitle */}
-          <p className="text-white/75 text-xs sm:text-base font-normal max-w-lg mb-6 sm:mb-8 leading-relaxed">
+          <p className="text-white/75 text-xs sm:text-base font-normal max-w-lg mb-4 sm:mb-7 leading-relaxed">
             Discover verified houses, plots & commercial properties in Bahria Town Lahore with transparent pricing.
           </p>
 
