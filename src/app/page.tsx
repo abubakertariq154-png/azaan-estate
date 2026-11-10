@@ -11,13 +11,12 @@ import {
   subscribeToProperties,
 } from '@/lib/propertyStorage';
 import { HeroSection } from '@/components/HeroSection';
-import { FilterBar } from '@/components/FilterBar';
 import { PropertyCard } from '@/components/PropertyCard';
 import { PropertyFormModal } from '@/components/PropertyFormModal';
 import { PropertyDetailsModal } from '@/components/PropertyDetailsModal';
 import { VideoModal } from '@/components/VideoModal';
 import { ContactSection } from '@/components/ContactSection';
-import { Building2, Sparkles, Plus, AlertCircle, SlidersHorizontal } from 'lucide-react';
+import { Building2, Plus, AlertCircle, SlidersHorizontal } from 'lucide-react';
 
 export default function Home() {
   const [properties, setProperties] = useState<Property[]>([]);
@@ -228,75 +227,59 @@ export default function Home() {
       <main className="flex-1">
 
         {/* Property Showcase & Exploration */}
-        <section id="properties-section" className="max-w-7xl mx-auto px-4 sm:px-8 pb-20 pt-8 sm:pt-12">
-          
-          {/* Section Heading & Category Tabs */}
-          <div className="mb-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
-            <div>
-              <span className="text-[#875d46] font-bold text-xs tracking-widest uppercase mb-1 block">
-                Exclusive Portfolio
-              </span>
-              <h2 className="text-2xl sm:text-4xl font-extrabold text-[#1c241e] tracking-tight">
-                {activeCategoryTab === 'all' && 'All Curated Properties'}
-                {activeCategoryTab === 'residential' && 'Residential Mansions & Villas'}
-                {activeCategoryTab === 'commercial' && 'Commercial Plazas & Corporate Hubs'}
-                {activeCategoryTab === 'highrise' && 'Skyline Penthouses & Highrises'}
-              </h2>
+        <section id="properties-section" className="max-w-7xl mx-auto px-4 sm:px-8 pb-20 pt-6 sm:pt-10">
+
+          {/* Compact top bar: category pills + search + listing type */}
+          <div className="flex flex-wrap items-center gap-2 mb-6 bg-white rounded-2xl border border-[#e8e6df] px-3 py-2.5 shadow-sm">
+            {/* Category Pills */}
+            <div className="flex items-center gap-1.5 overflow-x-auto">
+              {(['all', 'residential', 'commercial', 'highrise'] as const).map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => handleSelectTab(cat)}
+                  className={`px-3 py-1.5 rounded-full text-xs font-bold capitalize whitespace-nowrap transition-all border ${
+                    activeCategoryTab === cat
+                      ? 'bg-[#1c241e] text-white border-[#1c241e]'
+                      : 'bg-[#f5f3ef] text-stone-600 border-transparent hover:border-stone-300'
+                  }`}
+                >
+                  {cat === 'all' ? `All (${categoryCounts.all})` : cat === 'residential' ? `Houses (${categoryCounts.residential})` : cat === 'commercial' ? `Commercial (${categoryCounts.commercial})` : `Highrise (${categoryCounts.highrise})`}
+                </button>
+              ))}
             </div>
 
-            {/* Quick Segmented Category Switches with live counts */}
-            <div className="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0">
-              <button
-                onClick={() => handleSelectTab('all')}
-                className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all border ${
-                  activeCategoryTab === 'all'
-                    ? 'bg-[#1c241e] text-white border-[#1c241e] shadow-sm'
-                    : 'bg-white text-stone-600 border-[#e5e1d7] hover:border-stone-400'
-                }`}
-              >
-                All ({categoryCounts.all})
-              </button>
-              <button
-                onClick={() => handleSelectTab('residential')}
-                className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all border ${
-                  activeCategoryTab === 'residential'
-                    ? 'bg-[#1c241e] text-white border-[#1c241e] shadow-sm'
-                    : 'bg-white text-stone-600 border-[#e5e1d7] hover:border-stone-400'
-                }`}
-              >
-                Residential ({categoryCounts.residential})
-              </button>
-              <button
-                onClick={() => handleSelectTab('commercial')}
-                className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all border ${
-                  activeCategoryTab === 'commercial'
-                    ? 'bg-[#1c241e] text-white border-[#1c241e] shadow-sm'
-                    : 'bg-white text-stone-600 border-[#e5e1d7] hover:border-stone-400'
-                }`}
-              >
-                Commercial ({categoryCounts.commercial})
-              </button>
-              <button
-                onClick={() => handleSelectTab('highrise')}
-                className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all border ${
-                  activeCategoryTab === 'highrise'
-                    ? 'bg-[#1c241e] text-white border-[#1c241e] shadow-sm'
-                    : 'bg-white text-stone-600 border-[#e5e1d7] hover:border-stone-400'
-                }`}
-              >
-                Highrise ({categoryCounts.highrise})
-              </button>
-            </div>
-          </div>
+            <div className="h-5 w-px bg-stone-200 hidden sm:block" />
 
-          {/* Interactive Search & Filter Controls */}
-          <div className="mb-8">
-            <FilterBar
-              filters={filters}
-              onFilterChange={handleFilterChange}
-              onResetFilters={handleResetFilters}
-              totalResults={filteredProperties.length}
-            />
+            {/* For Sale / Rent toggle */}
+            <div className="flex items-center gap-1.5">
+              {(['all', 'sale', 'rent'] as const).map((type) => (
+                <button
+                  key={type}
+                  onClick={() => handleFilterChange('listingType', type)}
+                  className={`px-3 py-1.5 rounded-full text-xs font-bold capitalize whitespace-nowrap transition-all border ${
+                    filters.listingType === type
+                      ? 'bg-[#875d46] text-white border-[#875d46]'
+                      : 'bg-[#f5f3ef] text-stone-600 border-transparent hover:border-stone-300'
+                  }`}
+                >
+                  {type === 'all' ? 'All Types' : type === 'sale' ? 'For Sale' : 'For Rent'}
+                </button>
+              ))}
+            </div>
+
+            {/* Search */}
+            <div className="ml-auto relative min-w-[160px]">
+              <input
+                type="text"
+                value={filters.searchQuery}
+                onChange={(e) => handleFilterChange('searchQuery', e.target.value)}
+                placeholder="Search properties..."
+                className="w-full pl-3 pr-8 py-1.5 text-xs rounded-xl border border-stone-200 bg-[#faf9f7] focus:outline-none focus:ring-1 focus:ring-[#875d46]"
+              />
+              {filters.searchQuery && (
+                <button onClick={() => handleFilterChange('searchQuery', '')} className="absolute right-2 top-1.5 text-stone-400 hover:text-stone-700 text-xs">✕</button>
+              )}
+            </div>
           </div>
 
           {/* Property Cards Grid */}
