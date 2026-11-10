@@ -216,68 +216,45 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-[#f6f5f2] text-[#1c241e] flex flex-col selection:bg-[#875d46] selection:text-white font-sans">
       
-      {/* 100vh Hero Section With Integrated Navbar */}
+      {/* Hero Section With Integrated Search & Filters */}
       <HeroSection
+        filters={filters}
+        onFilterChange={handleFilterChange}
         activeCategory={activeCategoryTab}
         onSelectCategory={handleSelectTab}
-        onOpenAddModal={handleOpenAdd}
+        categoryCounts={categoryCounts}
+        totalResults={filteredProperties.length}
       />
 
       {/* Main Container */}
       <main className="flex-1 bg-[#dfe6dd]">
 
         {/* Property Showcase & Exploration */}
-        <section id="properties-section" className="max-w-7xl mx-auto px-4 sm:px-8 pb-20 pt-6 sm:pt-10">
+        <section id="properties-section" className="max-w-7xl mx-auto px-4 sm:px-8 pb-20 pt-8 sm:pt-12">
 
-          {/* Compact top bar: category pills + search + listing type */}
-          <div className="flex flex-wrap items-center gap-2 mb-6 bg-white rounded-2xl border border-[#e8e6df] px-3 py-2.5 shadow-sm">
-            {/* Category Pills */}
-            <div className="flex items-center gap-1.5 overflow-x-auto">
-              {(['all', 'residential', 'commercial', 'highrise'] as const).map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => handleSelectTab(cat)}
-                  className={`px-3 py-1.5 rounded-full text-xs font-bold capitalize whitespace-nowrap transition-all border ${
-                    activeCategoryTab === cat
-                      ? 'bg-[#1c241e] text-white border-[#1c241e]'
-                      : 'bg-[#f5f3ef] text-stone-600 border-transparent hover:border-stone-300'
-                  }`}
-                >
-                  {cat === 'all' ? `All (${categoryCounts.all})` : cat === 'residential' ? `Houses (${categoryCounts.residential})` : cat === 'commercial' ? `Commercial (${categoryCounts.commercial})` : `Highrise (${categoryCounts.highrise})`}
-                </button>
-              ))}
+          {/* Section Header & Active Filter Bar */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 sm:mb-8">
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <span className="w-2 h-2 rounded-full bg-[#875d46]" />
+                <span className="text-xs uppercase font-extrabold tracking-wider text-[#875d46]">Verified Portfolio</span>
+              </div>
+              <h2 className="text-2xl sm:text-3xl font-black text-[#1c241e] tracking-tight">
+                Featured Properties
+              </h2>
             </div>
 
-            <div className="h-5 w-px bg-stone-200 hidden sm:block" />
-
-            {/* For Sale / Rent toggle */}
-            <div className="flex items-center gap-1.5">
-              {(['all', 'sale', 'rent'] as const).map((type) => (
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-xs font-semibold px-3 py-1.5 rounded-full bg-white text-stone-700 border border-stone-200 shadow-2xs">
+                Showing {filteredProperties.length} of {properties.length} listings
+              </span>
+              {(filters.category !== 'all' || filters.listingType !== 'all' || filters.searchQuery) && (
                 <button
-                  key={type}
-                  onClick={() => handleFilterChange('listingType', type)}
-                  className={`px-3 py-1.5 rounded-full text-xs font-bold capitalize whitespace-nowrap transition-all border ${
-                    filters.listingType === type
-                      ? 'bg-[#875d46] text-white border-[#875d46]'
-                      : 'bg-[#f5f3ef] text-stone-600 border-transparent hover:border-stone-300'
-                  }`}
+                  onClick={handleResetFilters}
+                  className="text-xs font-bold px-3 py-1.5 rounded-full bg-[#875d46] hover:bg-[#724e3a] text-white transition-colors cursor-pointer"
                 >
-                  {type === 'all' ? 'All Types' : type === 'sale' ? 'For Sale' : 'For Rent'}
+                  Clear Filters ✕
                 </button>
-              ))}
-            </div>
-
-            {/* Search */}
-            <div className="ml-auto relative min-w-[160px]">
-              <input
-                type="text"
-                value={filters.searchQuery}
-                onChange={(e) => handleFilterChange('searchQuery', e.target.value)}
-                placeholder="Search properties..."
-                className="w-full pl-3 pr-8 py-1.5 text-xs rounded-xl border border-stone-200 bg-[#faf9f7] focus:outline-none focus:ring-1 focus:ring-[#875d46]"
-              />
-              {filters.searchQuery && (
-                <button onClick={() => handleFilterChange('searchQuery', '')} className="absolute right-2 top-1.5 text-stone-400 hover:text-stone-700 text-xs">✕</button>
               )}
             </div>
           </div>
