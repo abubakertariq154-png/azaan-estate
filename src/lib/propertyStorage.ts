@@ -3,7 +3,7 @@
 import { Property } from '@/types/property';
 import { INITIAL_PROPERTIES } from '@/data/initialProperties';
 
-const STORAGE_KEY = 'azaan_estate_properties_v1';
+const STORAGE_KEY = 'azaan_estate_properties_v3';
 const CHANGE_EVENT = 'azaan_properties_changed';
 
 /**
@@ -126,3 +126,4 @@ export function subscribeToProperties(callback: (properties: Property[]) => void
     window.removeEventListener('storage', handleStorageEvent);
   };
 }
+

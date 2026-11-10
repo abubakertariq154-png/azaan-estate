@@ -35,16 +35,34 @@ export const PropertyDetailsModal: React.FC<PropertyDetailsModalProps> = ({
     return listingType === 'rent' ? `$${price.toLocaleString()}/mo` : `$${price.toLocaleString()}`;
   };
 
-  const shareProperty = () => {
-    if (navigator.share) {
-      navigator.share({
-        title: property.title,
-        text: `Check out ${property.title} on Azaan Estate!`,
-        url: window.location.href,
-      }).catch(() => {});
-    } else {
-      navigator.clipboard.writeText(window.location.href);
-      alert('Link copied to clipboard!');
+  const getShareableUrl = () => {
+    const url = new URL(window.location.href);
+    url.searchParams.set('property', property.id);
+    return url.toString();
+  };
+
+  const shareProperty = async () => {
+    const shareUrl = getShareableUrl();
+
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: property.title,
+          text: `Check out ${property.title} on Azaan Estate!`,
+          url: shareUrl,
+        });
+        return;
+      }
+
+      if (navigator.clipboard) {
+        await navigator.clipboard.writeText(shareUrl);
+        alert('Property link copied to clipboard!');
+        return;
+      }
+
+      window.prompt('Copy this property link:', shareUrl);
+    } catch {
+      // User cancelled the share sheet.
     }
   };
 

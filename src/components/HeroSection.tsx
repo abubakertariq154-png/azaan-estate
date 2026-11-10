@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Plus, ArrowUpRight, Building2, TrendingUp, Award, Phone, SlidersHorizontal } from 'lucide-react';
+import { Plus, ArrowUpRight, Building2, TrendingUp, Award, Phone } from 'lucide-react';
 import { PropertyCategory } from '@/types/property';
 
 interface HeroSectionProps {
@@ -40,19 +40,22 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           {/* Logo & Brand Name: AZAAN ESTATE */}
           <div 
             onClick={() => onSelectCategory('all')} 
-            className="flex items-center gap-2.5 sm:gap-3 cursor-pointer group bg-white/70 sm:bg-transparent backdrop-blur-md sm:backdrop-blur-none px-3 py-1.5 sm:p-0 rounded-2xl"
+            className="flex items-center gap-2.5 sm:gap-3 cursor-pointer group"
           >
-            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl border-2 border-[#1c241e] flex items-center justify-center transition-transform group-hover:scale-105 bg-white/40">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" className="w-5 h-5 text-[#1c241e]">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl border-2 border-[#875d46] flex items-center justify-center transition-transform group-hover:scale-105 bg-[#1c241e] shadow-lg">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5 sm:w-6 sm:h-6 text-[#d4a574]">
                 <path strokeLinecap="round" strokeLinejoin="round" d="m3 9.75 9-7.5 9 7.5v9.75a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 19.5V9.75Z" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 22.5V12h6v10.5" />
               </svg>
             </div>
             <div>
-              <div className="font-black text-lg sm:text-xl md:text-2xl tracking-tight text-[#1c241e] leading-none">
-                AZAAN ESTATE
+              <div className="font-black text-lg sm:text-xl md:text-2xl tracking-tight text-[#1c241e] leading-none drop-shadow-sm">
+                AZAAN<span className="text-[#875d46]"> ESTATE</span>
               </div>
-              <div className="text-[9px] tracking-widest text-[#5a4638] uppercase font-bold mt-0.5">
+              <div className="text-[9px] tracking-widest text-[#875d46] uppercase font-bold mt-0.5 flex items-center gap-1">
+                <span className="w-3 h-px bg-[#875d46] inline-block"></span>
                 REAL ESTATE
+                <span className="w-3 h-px bg-[#875d46] inline-block"></span>
               </div>
             </div>
           </div>
@@ -93,22 +96,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
           {/* Right Action Buttons */}
           <div className="flex items-center gap-2 sm:gap-3">
-            <Link
-              href="/admin"
-              className="flex items-center gap-1.5 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-full bg-white/80 hover:bg-white text-[#1c241e] text-xs font-bold transition-all shadow-sm backdrop-blur-md border border-[#e4ded5]"
-            >
-              <SlidersHorizontal className="w-3.5 h-3.5 text-[#875d46]" />
-              <span>Admin Panel</span>
-            </Link>
-
-            <button
-              onClick={onOpenAddModal}
-              className="flex items-center gap-1.5 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-full bg-white/80 hover:bg-white text-[#1c241e] text-xs font-bold transition-all shadow-sm backdrop-blur-md border border-[#e4ded5]"
-            >
-              <Plus className="w-3.5 h-3.5" />
-              <span>List Property</span>
-            </button>
-
             <a
               href="#contact"
               className="group flex items-center gap-2 pl-3.5 sm:pl-4 pr-1.5 py-1.5 rounded-full bg-[#1c241e] hover:bg-[#2e3a31] text-white text-xs font-medium transition-all shadow-md"
@@ -134,7 +121,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           </div>
 
           {/* Main Title */}
-          <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-[#1c241e] leading-[1.08] mb-3 sm:mb-5">
+          <h1 className="text-2xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-[#1c241e] leading-[1.08] mb-3 sm:mb-5">
             Find a Place <br />
             to <span className="text-[#875d46]">Call Home</span>
           </h1>
@@ -144,7 +131,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             Discover modern homes, premium locations and a lifestyle you deserve with curated architectural precision.
           </p>
 
-          {/* Buttons matching image */}
+          {/* Buttons */}
           <div className="flex flex-wrap items-center gap-3">
             <a
               href="#properties-section"
@@ -156,12 +143,13 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               </div>
             </a>
 
-            <button
-              onClick={onOpenAddModal}
+            <a
+              href="#contact"
               className="inline-flex items-center gap-2 px-4 sm:px-5 py-2.5 sm:py-3 rounded-full bg-white/85 hover:bg-white text-[#1c241e] text-xs sm:text-sm font-semibold backdrop-blur-md border border-[#e2decb] shadow-md transition-all hover:-translate-y-0.5"
             >
-              <span>+ List New Property</span>
-            </button>
+              <Phone className="w-3.5 h-3.5 text-[#875d46]" />
+              <span>Contact Advisor</span>
+            </a>
           </div>
 
         </div>

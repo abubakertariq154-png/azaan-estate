@@ -63,6 +63,8 @@ export default function AdminPage() {
 
   // Toast message
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [websiteLink, setWebsiteLink] = useState('');
+  const [adminLink, setAdminLink] = useState('');
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
@@ -71,8 +73,22 @@ export default function AdminPage() {
     }, 4000);
   };
 
+  const copyLink = async (label: string, url: string) => {
+    try {
+      await navigator.clipboard.writeText(url);
+      showToast(`${label} link copied.`);
+    } catch {
+      showToast(`Unable to copy ${label.toLowerCase()} link.`);
+    }
+  };
+
   // Load from storage and subscribe to changes
   useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setWebsiteLink(`${window.location.origin}/`);
+      setAdminLink(`${window.location.origin}/admin`);
+    }
+
     setProperties(getStoredProperties());
     setIsLoaded(true);
 
@@ -178,7 +194,12 @@ export default function AdminPage() {
   }, [properties, selectedCategory, selectedListingType, selectedCity, searchQuery, sortBy]);
 
   const formatPrice = (price: number, listingType: string) => {
-    return listingType === 'rent' ? `$${price.toLocaleString()}/mo` : `$${price.toLocaleString()}`;
+    const formatted = price >= 10000000
+      ? `${(price / 10000000).toFixed(1)} Cr`
+      : price >= 100000
+      ? `${(price / 100000).toFixed(1)} Lac`
+      : price.toLocaleString('en-PK');
+    return listingType === 'rent' ? `PKR ${formatted}/mo` : `PKR ${formatted}`;
   };
 
   const getCategoryBadgeClass = (category: PropertyCategory) => {
@@ -245,10 +266,12 @@ export default function AdminPage() {
 
             <Link
               href="/"
+              target="_blank"
+              rel="noopener noreferrer"
               className="px-4 py-2 rounded-full border border-[#1c241e] bg-white hover:bg-stone-50 text-[#1c241e] text-xs font-bold flex items-center gap-1.5 transition-colors"
             >
               <Eye className="w-3.5 h-3.5" />
-              <span>Public Website</span>
+              <span>Open Website</span>
               <ArrowUpRight className="w-3 h-3 text-stone-500" />
             </Link>
 
@@ -263,6 +286,62 @@ export default function AdminPage() {
 
         </div>
       </header>
+
+      {/* Client Links */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-8 pt-6 w-full">
+        <div className="bg-white border border-[#e8e6df] rounded-[24px] p-4 sm:p-5 shadow-xs">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+            <div>
+              <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#875d46] mb-1.5">Send to Client</p>
+              <h2 className="text-xl font-black text-[#1c241e]">Website & Admin Links</h2>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 w-full lg:max-w-2xl">
+              <div className="rounded-2xl border border-[#efe8df] bg-[#faf7f3] p-3">
+                <div className="flex items-center justify-between gap-3 mb-2">
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-stone-600">Website</span>
+                  <a
+                    href={websiteLink || '/'}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-[#875d46] font-semibold text-xs hover:underline"
+                  >
+                    Open
+                  </a>
+                </div>
+                <p className="text-xs text-stone-500 break-all mb-3">{websiteLink || 'Loading...'}</p>
+                <button
+                  onClick={() => copyLink('Website', websiteLink || window.location.origin + '/')}
+                  className="px-3 py-1.5 rounded-full bg-[#1c241e] text-white text-[11px] font-semibold hover:bg-[#2b362e] transition-colors"
+                >
+                  Copy Link
+                </button>
+              </div>
+
+              <div className="rounded-2xl border border-[#efe8df] bg-[#faf7f3] p-3">
+                <div className="flex items-center justify-between gap-3 mb-2">
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-stone-600">Admin</span>
+                  <a
+                    href={adminLink || '/admin'}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-[#875d46] font-semibold text-xs hover:underline"
+                  >
+                    Open
+                  </a>
+                </div>
+                <p className="text-xs text-stone-500 break-all mb-3">{adminLink || 'Loading...'}</p>
+                <button
+                  onClick={() => copyLink('Admin', adminLink || window.location.origin + '/admin')}
+                  className="px-3 py-1.5 rounded-full bg-[#1c241e] text-white text-[11px] font-semibold hover:bg-[#2b362e] transition-colors"
+                >
+                  Copy Link
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Main Admin Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-8 py-8 flex-1 w-full space-y-6">
@@ -834,3 +913,4 @@ export default function AdminPage() {
     </div>
   );
 }
+

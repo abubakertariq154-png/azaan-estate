@@ -29,7 +29,12 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
   onEdit,
 }) => {
   const formatPrice = (price: number, listingType: string) => {
-    return listingType === 'rent' ? `$${price.toLocaleString()}/mo` : `$${price.toLocaleString()}`;
+    const formatted = price >= 10000000
+      ? `${(price / 10000000).toFixed(1)} کروڑ`
+      : price >= 100000
+      ? `${(price / 100000).toFixed(1)} لاکھ`
+      : price.toLocaleString('en-PK');
+    return listingType === 'rent' ? `PKR ${formatted}/ماہ` : `PKR ${formatted}`;
   };
 
   const getCategoryBadge = (category: string) => {

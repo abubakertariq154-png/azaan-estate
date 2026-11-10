@@ -52,6 +52,30 @@ export default function Home() {
     return () => unsubscribe();
   }, []);
 
+  useEffect(() => {
+    const propertyId = new URLSearchParams(window.location.search).get('property');
+    if (!propertyId || properties.length === 0) return;
+
+    const propertyFromUrl = properties.find((item) => item.id === propertyId);
+    if (propertyFromUrl) {
+      setSelectedProperty(propertyFromUrl);
+    }
+  }, [properties]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+
+    if (selectedProperty) {
+      params.set('property', selectedProperty.id);
+    } else {
+      params.delete('property');
+    }
+
+    const queryString = params.toString();
+    const nextUrl = `${window.location.pathname}${queryString ? `?${queryString}` : ''}`;
+    window.history.replaceState({}, '', nextUrl);
+  }, [selectedProperty]);
+
   // Sync category navbar tab with filters
   const handleSelectTab = (tab: 'all' | PropertyCategory) => {
     setActiveCategoryTab(tab);
@@ -369,6 +393,26 @@ export default function Home() {
         title={activeVideo?.title || ''}
         onClose={() => setActiveVideo(null)}
       />
+
+      {/* WhatsApp Floating Button */}
+      <a
+        href="https://wa.me/923045351802"
+        target="_blank"
+        rel="noopener noreferrer"
+        title="Chat on WhatsApp with Abubakr"
+        className="fixed bottom-6 right-5 z-50 flex items-center gap-2.5 group"
+      >
+        {/* Tooltip */}
+        <span className="hidden group-hover:flex items-center bg-[#1c241e] text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg whitespace-nowrap">
+          Chat with Abubakr
+        </span>
+        {/* WhatsApp Icon Button */}
+        <div className="w-14 h-14 rounded-full bg-[#25D366] hover:bg-[#20b957] shadow-2xl flex items-center justify-center transition-all hover:scale-110 active:scale-95 border-4 border-white">
+          <svg viewBox="0 0 32 32" className="w-7 h-7 fill-white" xmlns="http://www.w3.org/2000/svg">
+            <path d="M16.004 2.667C8.638 2.667 2.667 8.638 2.667 16c0 2.333.63 4.63 1.826 6.638L2.667 29.333l6.861-1.796A13.263 13.263 0 0 0 16.004 29.333C23.37 29.333 29.333 23.362 29.333 16S23.37 2.667 16.004 2.667zm0 24.267c-2.145 0-4.244-.575-6.08-1.665l-.435-.258-4.073 1.067 1.084-3.955-.283-.455A10.886 10.886 0 0 1 5.067 16c0-6.03 4.907-10.933 10.937-10.933S26.933 9.97 26.933 16 22.034 26.934 16.004 26.934zm5.993-8.182c-.328-.165-1.942-.957-2.242-1.067-.3-.11-.518-.165-.736.165s-.845 1.067-1.036 1.287c-.19.22-.382.247-.71.082-.328-.165-1.385-.51-2.638-1.627-.975-.87-1.633-1.943-1.824-2.271-.19-.328-.02-.505.144-.668.147-.146.328-.382.491-.573.164-.19.218-.328.328-.546.11-.22.055-.41-.027-.573-.082-.165-.736-1.774-1.009-2.429-.265-.636-.535-.55-.736-.56-.19-.008-.41-.01-.627-.01s-.573.082-.873.41c-.3.328-1.145 1.12-1.145 2.73s1.172 3.165 1.335 3.383c.164.22 2.307 3.52 5.59 4.937.782.337 1.391.539 1.866.69.784.25 1.498.215 2.062.13.629-.094 1.942-.793 2.216-1.56.274-.764.274-1.42.19-1.558-.082-.137-.3-.22-.627-.383z"/>
+          </svg>
+        </div>
+      </a>
 
     </div>
   );
