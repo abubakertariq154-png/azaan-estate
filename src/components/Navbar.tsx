@@ -1,7 +1,8 @@
 'use client';
 
 import React from 'react';
-import { Plus, ArrowUpRight, Building2, Home } from 'lucide-react';
+import Link from 'next/link';
+import { Plus, ArrowUpRight, Building2, Home, SlidersHorizontal } from 'lucide-react';
 import { PropertyCategory } from '@/types/property';
 
 interface NavbarProps {
@@ -76,6 +77,14 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         {/* Right Action Buttons */}
         <div className="flex items-center gap-2.5">
+          <Link
+            href="/admin"
+            className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-full border border-stone-300 bg-white hover:bg-stone-50 text-[#1c241e] text-xs font-bold transition-all shadow-2xs"
+          >
+            <SlidersHorizontal className="w-3.5 h-3.5 text-[#875d46]" />
+            <span>Admin Panel</span>
+          </Link>
+
           <button
             onClick={onOpenAddModal}
             className="flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-[#e8e6df] hover:bg-[#dedcd4] text-[#1c241e] text-xs font-semibold transition-all"

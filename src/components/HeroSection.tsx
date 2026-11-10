@@ -1,7 +1,8 @@
 'use client';
 
 import React from 'react';
-import { Plus, ArrowUpRight, Building2, TrendingUp, Award, Phone } from 'lucide-react';
+import Link from 'next/link';
+import { Plus, ArrowUpRight, Building2, TrendingUp, Award, Phone, SlidersHorizontal } from 'lucide-react';
 import { PropertyCategory } from '@/types/property';
 
 interface HeroSectionProps {
@@ -92,6 +93,14 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
           {/* Right Action Buttons */}
           <div className="flex items-center gap-2 sm:gap-3">
+            <Link
+              href="/admin"
+              className="flex items-center gap-1.5 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-full bg-white/80 hover:bg-white text-[#1c241e] text-xs font-bold transition-all shadow-sm backdrop-blur-md border border-[#e4ded5]"
+            >
+              <SlidersHorizontal className="w-3.5 h-3.5 text-[#875d46]" />
+              <span>Admin Panel</span>
+            </Link>
+
             <button
               onClick={onOpenAddModal}
               className="flex items-center gap-1.5 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-full bg-white/80 hover:bg-white text-[#1c241e] text-xs font-bold transition-all shadow-sm backdrop-blur-md border border-[#e4ded5]"

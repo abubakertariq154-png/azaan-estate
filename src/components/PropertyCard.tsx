@@ -8,6 +8,7 @@ import {
   Bath, 
   Maximize2, 
   Trash2, 
+  Edit,
   Play, 
   ArrowUpRight 
 } from 'lucide-react';
@@ -17,6 +18,7 @@ interface PropertyCardProps {
   onViewDetails: (property: Property) => void;
   onDelete: (id: string, e: React.MouseEvent) => void;
   onOpenVideo: (videoUrl: string, title: string, e: React.MouseEvent) => void;
+  onEdit?: (property: Property, e: React.MouseEvent) => void;
 }
 
 export const PropertyCard: React.FC<PropertyCardProps> = ({
@@ -24,6 +26,7 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
   onViewDetails,
   onDelete,
   onOpenVideo,
+  onEdit,
 }) => {
   const formatPrice = (price: number, listingType: string) => {
     return listingType === 'rent' ? `$${price.toLocaleString()}/mo` : `$${price.toLocaleString()}`;
@@ -80,6 +83,16 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
                 className="w-8 h-8 rounded-full bg-[#1c241e]/90 hover:bg-[#875d46] text-white flex items-center justify-center shadow-md transition-transform hover:scale-110 active:scale-95"
               >
                 <Play className="w-3.5 h-3.5 fill-current ml-0.5" />
+              </button>
+            )}
+            {onEdit && (
+              <button
+                type="button"
+                onClick={(e) => onEdit(property, e)}
+                title="Edit Listing"
+                className="w-8 h-8 rounded-full bg-white/90 hover:bg-emerald-50 text-stone-600 hover:text-emerald-700 backdrop-blur-md border border-stone-200 flex items-center justify-center transition-all hover:scale-110 active:scale-95"
+              >
+                <Edit className="w-3.5 h-3.5" />
               </button>
             )}
             <button

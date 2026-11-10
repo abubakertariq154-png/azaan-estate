@@ -1,23 +1,31 @@
 'use client';
 
 import React, { useState, useMemo, useEffect } from 'react';
+import Link from 'next/link';
 import { Property, PropertyCategory, PropertyFilterState } from '@/types/property';
-import { INITIAL_PROPERTIES } from '@/data/initialProperties';
+import {
+  getStoredProperties,
+  addProperty,
+  updateProperty,
+  deleteProperty,
+  subscribeToProperties,
+} from '@/lib/propertyStorage';
 import { HeroSection } from '@/components/HeroSection';
 import { FilterBar } from '@/components/FilterBar';
 import { PropertyCard } from '@/components/PropertyCard';
-import { AddPropertyModal } from '@/components/AddPropertyModal';
+import { PropertyFormModal } from '@/components/PropertyFormModal';
 import { PropertyDetailsModal } from '@/components/PropertyDetailsModal';
 import { VideoModal } from '@/components/VideoModal';
 import { ContactSection } from '@/components/ContactSection';
-import { Building2, Sparkles, Plus, AlertCircle } from 'lucide-react';
+import { Building2, Sparkles, Plus, AlertCircle, SlidersHorizontal } from 'lucide-react';
 
 export default function Home() {
-  const [properties, setProperties] = useState<Property[]>(INITIAL_PROPERTIES);
+  const [properties, setProperties] = useState<Property[]>([]);
   const [activeCategoryTab, setActiveCategoryTab] = useState<'all' | PropertyCategory>('all');
   
   // Modals state
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isFormModalOpen, setIsFormModalOpen] = useState(false);
+  const [editingProperty, setEditingProperty] = useState<Property | null>(null);
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
   const [activeVideo, setActiveVideo] = useState<{ url: string; title: string } | null>(null);
 
@@ -32,6 +40,17 @@ export default function Home() {
     bedrooms: 'all',
     sortBy: 'newest',
   });
+
+  // Load properties from persistent storage and subscribe
+  useEffect(() => {
+    setProperties(getStoredProperties());
+
+    const unsubscribe = subscribeToProperties((updated) => {
+      setProperties(updated);
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   // Sync category navbar tab with filters
   const handleSelectTab = (tab: 'all' | PropertyCategory) => {
@@ -69,16 +88,36 @@ export default function Home() {
     setActiveCategoryTab('all');
   };
 
-  // Add property handler
-  const handleAddProperty = (newProperty: Property) => {
-    setProperties((prev) => [newProperty, ...prev]);
+  // Open Add modal
+  const handleOpenAdd = () => {
+    setEditingProperty(null);
+    setIsFormModalOpen(true);
+  };
+
+  // Open Edit modal
+  const handleOpenEdit = (property: Property, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setEditingProperty(property);
+    setIsFormModalOpen(true);
+  };
+
+  // Save property (handles both Add and Edit)
+  const handleSaveProperty = (propertyData: Property) => {
+    if (editingProperty) {
+      updateProperty(propertyData);
+    } else {
+      addProperty(propertyData);
+    }
+    if (selectedProperty?.id === propertyData.id) {
+      setSelectedProperty(propertyData);
+    }
   };
 
   // Delete property handler
   const handleDeleteProperty = (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
     if (confirm('Are you sure you want to remove this property listing?')) {
-      setProperties((prev) => prev.filter((p) => p.id !== id));
+      deleteProperty(id);
       if (selectedProperty?.id === id) {
         setSelectedProperty(null);
       }
@@ -158,7 +197,7 @@ export default function Home() {
       <HeroSection
         activeCategory={activeCategoryTab}
         onSelectCategory={handleSelectTab}
-        onOpenAddModal={() => setIsAddModalOpen(true)}
+        onOpenAddModal={handleOpenAdd}
       />
 
       {/* Main Container */}
@@ -244,6 +283,7 @@ export default function Home() {
                   key={property.id}
                   property={property}
                   onViewDetails={(prop) => setSelectedProperty(prop)}
+                  onEdit={(prop, e) => handleOpenEdit(prop, e)}
                   onDelete={handleDeleteProperty}
                   onOpenVideo={(url, title, e) => handleOpenVideo(url, title, e)}
                 />
@@ -266,7 +306,7 @@ export default function Home() {
                   Clear All Filters
                 </button>
                 <button
-                  onClick={() => setIsAddModalOpen(true)}
+                  onClick={handleOpenAdd}
                   className="px-5 py-2.5 rounded-full bg-[#1c241e] hover:bg-[#2b362e] text-white text-xs font-bold transition-all flex items-center gap-1.5"
                 >
                   <Plus className="w-4 h-4" />
@@ -287,26 +327,34 @@ export default function Home() {
       <footer className="border-t border-[#e8e6df] bg-[#f6f5f2] py-12 text-stone-600 text-xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-8 flex flex-col sm:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-lg border-2 border-[#1c241e] flex items-center justify-center">
-              <Building2 className="w-4 h-4 text-[#1c241e]" />
+            <div className="w-7 h-7 rounded-lg border-2 border-[#1c241e] flex items-center justify-center bg-[#1c241e] text-white">
+              <Building2 className="w-4 h-4" />
             </div>
             <span className="font-extrabold text-[#1c241e] tracking-tight text-sm">AZAAN ESTATE</span>
           </div>
-          <div className="flex items-center gap-6 font-medium">
+          <div className="flex items-center gap-6 font-medium flex-wrap">
             <button onClick={() => handleSelectTab('residential')} className="hover:text-[#1c241e] transition-colors">Residential</button>
             <button onClick={() => handleSelectTab('commercial')} className="hover:text-[#1c241e] transition-colors">Commercial</button>
             <button onClick={() => handleSelectTab('highrise')} className="hover:text-[#1c241e] transition-colors">Highrise</button>
             <a href="#contact" className="hover:text-[#1c241e] transition-colors">Contact</a>
+            <Link href="/admin" className="text-[#875d46] hover:text-[#1c241e] font-bold flex items-center gap-1">
+              <SlidersHorizontal className="w-3.5 h-3.5" />
+              <span>Admin Portal</span>
+            </Link>
           </div>
           <p className="text-stone-500">&copy; 2026 Azaan Estate. All rights reserved.</p>
         </div>
       </footer>
 
       {/* Interactive Modals */}
-      <AddPropertyModal
-        isOpen={isAddModalOpen}
-        onClose={() => setIsAddModalOpen(false)}
-        onAddProperty={handleAddProperty}
+      <PropertyFormModal
+        isOpen={isFormModalOpen}
+        onClose={() => {
+          setIsFormModalOpen(false);
+          setEditingProperty(null);
+        }}
+        onSave={handleSaveProperty}
+        initialProperty={editingProperty}
       />
 
       <PropertyDetailsModal

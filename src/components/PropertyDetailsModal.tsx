@@ -39,7 +39,7 @@ export const PropertyDetailsModal: React.FC<PropertyDetailsModalProps> = ({
     if (navigator.share) {
       navigator.share({
         title: property.title,
-        text: `Check out ${property.title} on Aura Estates!`,
+        text: `Check out ${property.title} on Azaan Estate!`,
         url: window.location.href,
       }).catch(() => {});
     } else {
